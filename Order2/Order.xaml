@@ -1,0 +1,40 @@
+﻿<Window x:Class="Order2.Order"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:art.data="clr-namespace:Artifact.Data;assembly=Artifact"
+        xmlns:local.cvt="clr-namespace:Order2.Convertor"
+        mc:Ignorable="d"
+
+        Title="Order" Height="340.525" Width="267" Loaded="Window_Loaded">
+    <Window.Resources>
+        <local.cvt:CheckedConvertor x:Key="cvt_selected"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"></RowDefinition>
+            <RowDefinition Height="20*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TreeView x:Name="treeView" Margin="5,28,5,22" BorderThickness="0">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type art.data:Meta}" ItemsSource="{Binding Path=Children,Mode=TwoWay}">
+                    <CheckBox Content="{Binding [name]}" IsChecked="{Binding Path=[checked],Converter={StaticResource cvt_selected}}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Click="Button_Click">确定</Button>
+        </StackPanel>
+
+    </Grid>
+</Window>

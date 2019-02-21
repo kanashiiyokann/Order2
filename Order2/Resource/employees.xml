@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<employees>
+  <group name="group1">
+    <employee onLineId="ff8080815fd8e0b8015fe671a43c18f7" sesstionId="7786365302200393728" name="赵有文" no="24379471" checked="True" />
+  </group>
+</employees>
