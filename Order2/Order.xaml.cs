@@ -33,8 +33,12 @@ namespace Order2
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            orderService.getToken();
+             orderService.Login("24379471", "dgg317412");
+            orderService.GetOrderRecord(this.empList);
 
-            orderService.Login("24379471","dgg317412");
+            foreach(Li)
+            ///
 
         }
 
