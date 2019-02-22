@@ -37,7 +37,7 @@ namespace Order2
              orderService.Login("24379471", "dgg317412");
             orderService.GetOrderRecord(this.empList);
 
-            foreach(Li)
+            
             ///
 
         }
