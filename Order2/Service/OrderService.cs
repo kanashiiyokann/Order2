@@ -8,12 +8,14 @@ using Artifact.Encrypt;
 using Newtonsoft.Json;
 using System.Net;
 using System.IO;
+using System.Threading;
 
 namespace Order2.Service
 {
     public class OrderService
     {
         private HttpClient http;
+        private AutoResetEvent autoResetEvent;
 
         private string url_meal_list = "http://cloudfront.dgg.net/cloud-front/dinner/getUsableMealList";
         private string token;
@@ -125,7 +127,17 @@ namespace Order2.Service
         {
             string url_order_meal = "http://cloudfront.dgg.net/cloud-front/dinner/admin/addDinnerMeal";
             HttpClient http = getDefaultHttpCilent(url_order_meal);
-          
+
+            autoResetEvent = new AutoResetEvent(false);
+
+            foreach(Meta emp in empList)
+            {
+                //autoResetEvent
+
+
+            }
+
+            autoResetEvent.WaitOne();
 
 
         }
@@ -143,10 +155,14 @@ namespace Order2.Service
         private HttpClient getDefaultHttpCilent(string url)
         {
             HttpClient http = new HttpClient();
+
+
             http.PreparePost(url);
             http.AddHeader("Content-Type", "application/json;charset=UTF-8");
               if(this.token!=null)  http.AddHeader("token", token);
             http.AddHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+
+
             return http;
         }
 
