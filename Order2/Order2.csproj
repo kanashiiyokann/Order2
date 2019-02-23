@@ -73,6 +73,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Convertor\CheckedConvertor.cs" />
+    <Compile Include="Convertor\MealInfoConvertor.cs" />
+    <Compile Include="Convertor\MealTipConvertor.cs" />
     <Compile Include="Service\OrderService.cs" />
     <Content Include="Resource\employees.xml">
       <SubType>Designer</SubType>
@@ -86,7 +88,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Entity\Employee.cs" />
+    <Compile Include="Entity\Element.cs" />
     <Compile Include="Order.xaml.cs">
       <DependentUpon>Order.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -115,7 +117,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resource\order.ini" />
+    <None Include="Resource\order.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary\Artifact.csproj">

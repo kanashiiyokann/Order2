@@ -12,8 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Artifact.Data;
-using Artifact.Net;
 using Artifact.Reader;
+using Order2.Entity;
 using Order2.Service;
 
 namespace Order2
@@ -23,22 +23,42 @@ namespace Order2
     /// </summary>
     public partial class Order : Window
     {
-        private List<Meta> empList;
+        private List<Element> empList;
         private OrderService orderService = new OrderService();
+          private  IniReader cfg;
+        private String mealId;
 
         public Order()
         {
             InitializeComponent();
+            //
+            cfg = new IniReader(System.AppDomain.CurrentDomain.BaseDirectory + "//Resource//order.ini");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            orderService.getToken();
-             orderService.Login("24379471", "dgg317412");
-            orderService.GetOrderRecord(this.empList);
 
-            
-            ///
+            if (this.mealId == null)
+            {
+                MessageBox.Show("请选择订餐！");
+                return;
+            }
+
+            List<Element> emps = getCheckedEmpList();
+            if (emps.Count == 0)
+            {
+                MessageBox.Show("请选择订餐人员！");
+                return;
+            }
+
+         List<String> failedList=   orderService.OrderMeal(this.mealId, emps);
+
+            if (failedList.Count == 0)
+            {
+                MessageBox.Show("全部订餐成功！");
+            }
+
+
 
         }
 
@@ -47,29 +67,56 @@ namespace Order2
             //加载用户
             XmlReader reader = new XmlReader();
             reader.Load(System.AppDomain.CurrentDomain.BaseDirectory + "//Resource//employees.xml");
-            List<Meta> dataList = reader.Select("/employees")[0].Children;
-                this.empList = dataList;
+            List<Element> dataList = reader.Select<Element>("//group");
+               
+            foreach(Element group in dataList)
+            {
+                List<Element> children = reader.Select<Element>("//group[@Name='" + group.Name + "']/*");
+                group.Children = children;
+            }
+
             this.treeView.ItemsSource = dataList;
+            this.empList = dataList;
+            bool flag = true;
+            if (flag)
+            {
+                return;
+            }
+
+            //模拟登陆
+            orderService.getToken();
+      
+            orderService.Login(cfg.Read("setting", "name"), cfg.Read("setting", "pwd"));
+            
             //加载菜单
-          //  orderService.GetMealList("CDTY27L",this.empList[0]);
+
+          List<Meta> meals=  orderService.GetMealList("CDTY27L");
+
+            string skip = cfg.Read("setting", "skip");
+
+            meals=   meals.FindAll((meal) => { return skip.IndexOf(meal["mealName"])<0; });
+      
+            this.listBox.ItemsSource = meals;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             CheckBox ckb = sender as CheckBox;
-            Meta element = ckb.DataContext as Meta;
-             
+            Element element = ckb.DataContext as Element;
+
+          
             if (element !=null)
             {
-                bool? state = ckb.IsChecked;
-                if (element.HasParent())
+                string type =element.Type;
+            
+                if (type.Equals("employee"))
                 {
-                    Meta parent = element.Parent;
-                    List<Meta> brothers = parent.Children;
+                    Element parent = element.Parent;
+                    List<Element> brothers = parent.Children;
                     int count = 0;
-                    foreach(Meta bother in brothers)
+                    foreach (Element brother in brothers)
                     {
-                        if (bother["checked"].ToLower().Equals("true"))
+                        if (brother.Checked!=null && brother.Checked.ToLower().Equals("true"))
                         {
                             count++;
                         }
@@ -77,49 +124,30 @@ namespace Order2
                     }
                     if (count == brothers.Count)
                     {
-                        parent["checked"] = "True";
-                    }else if (count == 0)
-                    {
-                        parent["checked"] = "False";
-                    }
-                    else
-                    {
-                        parent["checked"] = "Vague";
-                    }
-
-                }
-                if (element.HasChild())
-                {
-                    List<Meta> children = element.Children;
-                    int count = 0;
-                    foreach (Meta child in children)
-                    {
-                        if (child["checked"].ToLower().Equals("true"))
-                        {
-                            count++;
-                        }
-
-                    }
-                    if (count == children.Count)
-                    {
-                        element["checked"] = "True";
+                        parent.Checked = "True";
                     }
                     else if (count == 0)
                     {
-                        element["checked"] = "False";
+                        parent.Checked = "False";
                     }
                     else
                     {
-                        element["checked"] = "Vague";
+                        parent.Checked = "Vague";
+                    }
+
+                }else if (type.Equals("group"))
+                {
+                    List<Element> children = element.Children;
+                    foreach (Element child in children)
+                    {
+                
+                        child.Checked=   ckb.IsChecked==true?"True":"False";
                     }
 
 
 
                 }
-                
-              
 
-           
 
             }
   
@@ -127,23 +155,32 @@ namespace Order2
         }
 
 
-        private List<Meta> getCheckedEmpList()
+        private List<Element> getCheckedEmpList()
         {
-            List<Meta> retList = new List<Meta>();
-            foreach(Meta group in this.empList)
+            List<Element> retList = new List<Element>();
+            foreach (Element group in this.empList)
             {
-                foreach(Meta emp in group.Children)
+                foreach (Element emp in group.Children)
                 {
-                    if (emp["checked"].ToLower().Equals("true"))
+                    if (emp.Checked.Equals("True"))
                     {
                         retList.Add(emp);
                     }
-
                 }
-
             }
             return retList;
+        }
+
+
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButton btn = sender as RadioButton;
+            Meta meal = btn.DataContext as Meta;
+
+            this.mealId = meal["id"];
 
         }
+
     }
 }

@@ -3,13 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local.entity="clr-namespace:Order2.Entity"
         xmlns:art.data="clr-namespace:Artifact.Data;assembly=Artifact"
         xmlns:local.cvt="clr-namespace:Order2.Convertor"
         mc:Ignorable="d"
 
-        Title="Order" Height="340.525" Width="267" Loaded="Window_Loaded">
+        Title="Order" Height="415.525" Width="328" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <local.cvt:CheckedConvertor x:Key="cvt_selected"/>
+        <local.cvt:MealInfoConvertor x:Key="cvt_meal_info"/>
+        <local.cvt:MealTipConvertor x:Key="cvt_meal_tip"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -17,8 +20,8 @@
             <RowDefinition Height="20*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="45*"></ColumnDefinition>
+            <ColumnDefinition Width="55*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <TreeView x:Name="treeView" Margin="5,28,5,22" BorderThickness="0">
             <TreeView.ItemContainerStyle>
@@ -27,11 +30,20 @@
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type art.data:Meta}" ItemsSource="{Binding Path=Children,Mode=TwoWay}">
-                    <CheckBox Content="{Binding [name]}" IsChecked="{Binding Path=[checked],Converter={StaticResource cvt_selected}}"/>
+                <HierarchicalDataTemplate DataType="{x:Type local.entity:Element}" ItemsSource="{Binding Path=Children}">
+                    <CheckBox Content="{Binding Name}" IsChecked="{Binding Path=Checked,Converter={StaticResource cvt_selected},Mode=TwoWay}" Click="CheckBox_Click"/>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
+        <ListBox Grid.Row="0" Grid.Column="1" Margin="5" x:Name="listBox">
+            <ListBox.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type art.data:Meta}">
+                    <RadioButton GroupName="radio-meal" ToolTip="{Binding Converter={StaticResource cvt_meal_tip}}" Checked="RadioButton_Checked">
+                        <Label Content="{Binding Converter={StaticResource cvt_meal_info}}" />
+                    </RadioButton>
+                </HierarchicalDataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Click="Button_Click">确定</Button>
         </StackPanel>

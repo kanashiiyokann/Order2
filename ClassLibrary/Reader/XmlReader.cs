@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.IO;
-using Artifact.Data;
+using System.Reflection;
 
 namespace Artifact.Reader
 {
@@ -17,42 +17,39 @@ namespace Artifact.Reader
             document.Load(path);
         }
 
-        public List<Meta> Select(string xpath)
+    
+        public List<T> Select<T> (string xpath)
         {
             XmlNodeList nodeList = document.SelectNodes(xpath);
-            List<Meta> retList = new List<Meta>();
+            List<T> list = new List<T>();
             foreach (XmlNode node in nodeList)
             {
-                retList.Add(parseNode(node));
-            }
+                T t = System.Activator.CreateInstance<T>();
+                Type type = t.GetType();
 
-            return retList;
-        }
-
-
-        private Meta parseNode(XmlNode node)
-        {
-            if (node == null) return null;
-
-            Meta ret = new Meta();
-
-            foreach (XmlAttribute attr in node.Attributes)
-            {
-                ret[attr.Name] = attr.Value;
-            }
-            ret["_name"] = node.Name;
-            if (node.InnerText != "") { ret["_value"] = node.InnerText; }
-            if (node.HasChildNodes)
-            {
-                XmlNodeList children = node.ChildNodes;
-                foreach (XmlNode child in children)
+                PropertyInfo pop;
+                foreach (XmlAttribute attr in node.Attributes)
                 {
-                    ret.AppendChild(parseNode(child));
+                    pop= type.GetProperty(attr.Name);
+                    if (pop != null)
+                    {
+                        pop.SetValue(t, attr.Value, null);
+                    }
                 }
 
-            }
+                string name = node.Name;
+                 pop = type.GetProperty("Type");
+                if (pop != null)
+                {
+                    pop.SetValue(t, name, null);
+                }
 
-            return ret;
+
+                list.Add(t);
+
+            }
+             
+            return list;
         }
 
 

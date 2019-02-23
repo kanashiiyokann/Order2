@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <employees>
-  <group name="group1">
-    <employee  name="赵有文" no="24379471" />
-    <employee  name="代杨" no="93879248" />
- 
+  <group Name="group1" Checked="Vague">
+    <employee  Name="赵有文" No="24379471" Checked="true" />
+    <employee  Name="代杨" No="93879248" />
+    <employee  Name="黄文娟" No="95814978" />
+    <employee  Name="刘阳" No="6302856" />
+    <employee  Name="孙上峰" No="1053560" />
+    <employee  Name="孙胜腾" No="12063576" />
   </group>
 </employees>
 
-<!--<employee  name="黄文娟" no="95814978" />
-<employee  name="刘阳" no="6302856" />
-<employee  name="孙上峰" no="1053560" />
-<employee  name="孙胜腾" no="12063576" />-->
+<!---->

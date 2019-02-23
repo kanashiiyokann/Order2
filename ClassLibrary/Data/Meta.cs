@@ -49,5 +49,32 @@ namespace Artifact.Data
             Children.Add(child);
             child.Parent = this;
         }
+
+        public Meta() { }
+        public static Meta Parse(Dictionary<string,object> dict) {
+
+            Meta ret = new Meta();
+            foreach(KeyValuePair<string, object> ky in dict)
+            {
+                ret[ky.Key.ToString()] = ky.Value.ToString();
+
+            }
+
+            return ret;
+
+        }
+        public static List<Meta> Parse(List<Dictionary<string, object>> dictList)
+        {
+
+            List<Meta> retList = new List<Meta>();
+            foreach (Dictionary<string, object> dict in dictList)
+            {
+                retList.Add(Meta.Parse(dict));
+
+            }
+
+            return retList;
+
+        }
     }
 }

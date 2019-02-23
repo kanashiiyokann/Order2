@@ -11,6 +11,7 @@ namespace Order2.Convertor
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             bool? ret = false;
+            if (value == null) return ret;
             string str = value.ToString().ToLower();
             if (str.Equals("true"))
             {

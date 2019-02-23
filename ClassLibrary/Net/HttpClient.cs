@@ -24,6 +24,7 @@ namespace Artifact.Net
         {
             request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
+            request.ServicePoint.Expect100Continue = false;
             return this;
         }
         #region
@@ -67,6 +68,7 @@ namespace Artifact.Net
                     break;
                 default:
                     request.Headers.Add(name, value);
+                  
                     break;
             }
 
