@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <employees>
-  <group Name="group1" Checked="Vague">
+  <group Name="项目二部" Checked="Vague">
     <employee  Name="赵有文" No="24379471" Checked="true" />
     <employee  Name="代杨" No="93879248" />
     <employee  Name="黄文娟" No="95814978" />
     <employee  Name="刘阳" No="6302856" />
     <employee  Name="孙上峰" No="1053560" />
     <employee  Name="孙胜腾" No="12063576" />
+  </group>
+  <group Name="其他">
+    <employee  Name="刘跃" No="943931278" />
+    <employee  Name="陈万国" No="80431678" />
   </group>
 </employees>
 

@@ -37,6 +37,12 @@ namespace Order2
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            List<Element> emps = getCheckedEmpList();
+            if (emps.Count == 0)
+            {
+                MessageBox.Show("请选择订餐人员！");
+                return;
+            }
 
             if (this.mealId == null)
             {
@@ -44,12 +50,7 @@ namespace Order2
                 return;
             }
 
-            List<Element> emps = getCheckedEmpList();
-            if (emps.Count == 0)
-            {
-                MessageBox.Show("请选择订餐人员！");
-                return;
-            }
+         
 
          List<String> failedList=   orderService.OrderMeal(this.mealId, emps);
 
@@ -77,12 +78,7 @@ namespace Order2
 
             this.treeView.ItemsSource = dataList;
             this.empList = dataList;
-            bool flag = true;
-            if (flag)
-            {
-                return;
-            }
-
+      
             //模拟登陆
             orderService.getToken();
       
@@ -162,7 +158,7 @@ namespace Order2
             {
                 foreach (Element emp in group.Children)
                 {
-                    if (emp.Checked.Equals("True"))
+                    if (emp.Checked!=null &&  emp.Checked.Equals("True"))
                     {
                         retList.Add(emp);
                     }

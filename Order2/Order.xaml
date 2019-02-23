@@ -16,8 +16,8 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80*"></RowDefinition>
-            <RowDefinition Height="20*"></RowDefinition>
+            <RowDefinition Height="90*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="45*"></ColumnDefinition>
@@ -35,7 +35,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <ListBox Grid.Row="0" Grid.Column="1" Margin="5" x:Name="listBox">
+        <ListBox Grid.Row="0" Grid.Column="1" Margin="5 ,28,5,22" x:Name="listBox">
             <ListBox.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type art.data:Meta}">
                     <RadioButton GroupName="radio-meal" ToolTip="{Binding Converter={StaticResource cvt_meal_tip}}" Checked="RadioButton_Checked">
