@@ -8,7 +8,7 @@
         xmlns:local.cvt="clr-namespace:Order2.Convertor"
         mc:Ignorable="d"
 
-        Title="Order" Height="415.525" Width="328" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Order" Height="470.406" Width="359.36" Loaded="Window_Loaded" ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <local.cvt:CheckedConvertor x:Key="cvt_selected"/>
         <local.cvt:MealInfoConvertor x:Key="cvt_meal_info"/>
@@ -35,7 +35,7 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <ListBox Grid.Row="0" Grid.Column="1" Margin="5 ,28,5,22" x:Name="listBox">
+        <ListBox Grid.Row="0" Grid.Column="1" Margin="0 ,35,10,22" x:Name="listBox" BorderThickness="0">
             <ListBox.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type art.data:Meta}">
                     <RadioButton GroupName="radio-meal" ToolTip="{Binding Converter={StaticResource cvt_meal_tip}}" Checked="RadioButton_Checked">
@@ -45,7 +45,8 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Button Click="Button_Click">确定</Button>
+            <Button Click="Button_Click_1" Margin="0,0,20,0" Padding="4">查询记录</Button>
+            <Button Click="Button_Click" Padding="4">确定点餐</Button>
         </StackPanel>
 
     </Grid>

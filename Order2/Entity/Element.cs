@@ -23,6 +23,8 @@ namespace Order2.Entity
 
         public string Checked { get { return choosed; } set { choosed = value; OnPropertyChanged("Checked"); } }
 
+     
+
         private List<Element> children;
         public List<Element> Children
         {

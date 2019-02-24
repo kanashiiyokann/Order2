@@ -84,26 +84,56 @@ namespace Order2.Service
         }
 
 
-        public void GetOrderRecord(List<Meta> empList)
+        public List<Dictionary<string, object>> GetOrderRecord(List<Element> empList)
         {
-            // getToken();
+            List<Dictionary<string, object>> retList = new List<Dictionary<string, object>>();
 
-            string url_order_record = "http://cloudfront.dgg.net/cloud-front/dinner/admin/getDinnerRecordList";
-            HttpClient http = getDefaultHttpCilent(url_order_record);
-            http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
-            http.AddHeader("Accept", "application/json, text/plain, */*");
-            http.AddHeader("Accept-Encoding", "gzip, deflate");
-            http.AddHeader("Connection", "keep-alive");
-            http.AddHeader("timestamp", getTimeStamp());
-            http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-            http.AddHeader("Origin", "http://xdy.dgg.net");
+             manualResetEventList = new List<ManualResetEvent>(empList.Count);
+            ManualResetEvent manualResetEvent;
+            foreach(Element emp in empList)
+            {
+                manualResetEvent = new ManualResetEvent(false);
+                manualResetEventList.Add(manualResetEvent);
 
-            string content = String.Format("{{\"deptId\":\"\",\"haveMealTimeEnd\":null,\"haveMealTimeStart\":null,\"mealType\":\"\",\"page\":1,\"pageSize\":3,\"peopleNo\":\"{0}\",\"searchType\":1,\"sourceType\":\"\"}}'", empList[0].Children[0]["no"]);
-            http.SetParameter(content);
-            string str = http.GetResponseString();
+                ThreadPool.QueueUserWorkItem(new WaitCallback((args)=> {
 
-            object data = JsonConvert.DeserializeObject(str);
+                    Object[] argArray = args as Object[];
+                    Element emplyoee = argArray[0] as Element;
+                    ManualResetEvent resetEvent = argArray[1] as ManualResetEvent;
 
+                    string url_order_record = "http://cloudfront.dgg.net/cloud-front/dinner/admin/getDinnerRecordList";
+                    HttpClient http = getDefaultHttpCilent(url_order_record);
+                    http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
+                    http.AddHeader("Accept", "application/json, text/plain, */*");
+                    http.AddHeader("Accept-Encoding", "gzip, deflate");
+                    http.AddHeader("Connection", "keep-alive");
+                    http.AddHeader("timestamp", getTimeStamp());
+                    http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
+                    http.AddHeader("Origin", "http://xdy.dgg.net");
+
+                    string content = String.Format("{{\"deptId\":\"\",\"haveMealTimeEnd\":null,\"haveMealTimeStart\":null,\"mealType\":\"\",\"page\":1,\"pageSize\":3,\"peopleNo\":\"{0}\",\"searchType\":1,\"sourceType\":\"\"}}'",emplyoee.No);
+                    http.SetParameter(content);
+                    string str = http.GetResponseString();
+                    Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string,object>>(str);
+                    if (data["code"].ToString().Equals("0"))
+                    {
+
+                        data= JsonConvert.DeserializeObject<Dictionary<string, object>>(data["data"].ToString());
+                        retList.Add(data);
+                    }
+
+                    manualResetEvent.Set();
+
+
+
+                }), new Object[] { emp, manualResetEvent });
+
+            }
+
+            WaitHandle.WaitAll(manualResetEventList.ToArray<ManualResetEvent>());
+            return retList;
+
+            
         }
 
         public void getToken()

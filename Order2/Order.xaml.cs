@@ -158,7 +158,7 @@ namespace Order2
             {
                 foreach (Element emp in group.Children)
                 {
-                    if (emp.Checked!=null &&  emp.Checked.Equals("True"))
+                    if (emp.Checked!=null &&  emp.Checked.ToLower().Equals("true"))
                     {
                         retList.Add(emp);
                     }
@@ -178,5 +178,16 @@ namespace Order2
 
         }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            List<Element> empList = getCheckedEmpList();
+            if (empList.Count == 0)
+            {
+                MessageBox.Show("请选择要查询的人员！");
+                return;
+            }
+        List<Dictionary<string,object>> mealRecordList=    orderService.GetOrderRecord(empList);
+
+        }
     }
 }
