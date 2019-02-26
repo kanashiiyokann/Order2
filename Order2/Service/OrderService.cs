@@ -15,7 +15,7 @@ namespace Order2.Service
 {
     public class OrderService
     {
-        private List<ManualResetEvent> manualResetEventList;
+        private List<AutoResetEvent> autoResetEventList;
 
         private string token;
 
@@ -84,22 +84,21 @@ namespace Order2.Service
         }
 
 
-        public List<Dictionary<string, object>> GetOrderRecord(List<Element> empList)
+        public List<String> GetOrderRecord(List<Element> empList)
         {
-            List<Dictionary<string, object>> retList = new List<Dictionary<string, object>>();
+            List<String> retList = new List<String>();
 
-             manualResetEventList = new List<ManualResetEvent>(empList.Count);
-            ManualResetEvent manualResetEvent;
+            AutoResetEvent autoResetEvent;
             foreach(Element emp in empList)
             {
-                manualResetEvent = new ManualResetEvent(false);
-                manualResetEventList.Add(manualResetEvent);
+                autoResetEvent = new AutoResetEvent(false);
+               
 
                 ThreadPool.QueueUserWorkItem(new WaitCallback((args)=> {
 
                     Object[] argArray = args as Object[];
                     Element emplyoee = argArray[0] as Element;
-                    ManualResetEvent resetEvent = argArray[1] as ManualResetEvent;
+                    AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
 
                     string url_order_record = "http://cloudfront.dgg.net/cloud-front/dinner/admin/getDinnerRecordList";
                     HttpClient http = getDefaultHttpCilent(url_order_record);
@@ -117,20 +116,18 @@ namespace Order2.Service
                     Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string,object>>(str);
                     if (data["code"].ToString().Equals("0"))
                     {
-
-                        data= JsonConvert.DeserializeObject<Dictionary<string, object>>(data["data"].ToString());
-                        retList.Add(data);
+                        retList.Add(data["data"].ToString());
                     }
 
-                    manualResetEvent.Set();
+                    resetEvent.Set();
 
 
 
-                }), new Object[] { emp, manualResetEvent });
+                }), new Object[] { emp, autoResetEvent });
+                autoResetEvent.WaitOne();
 
             }
 
-            WaitHandle.WaitAll(manualResetEventList.ToArray<ManualResetEvent>());
             return retList;
 
             
@@ -160,19 +157,19 @@ namespace Order2.Service
             List<String> failedList = new List<string>();
             string url_order_meal = "http://cloudfront.dgg.net/cloud-front/dinner/admin/addDinnerMeal";
 
-            manualResetEventList = new List<ManualResetEvent>(empList.Count);
+            autoResetEventList = new List<AutoResetEvent>(empList.Count);
 
             foreach (Element emp in empList)
             {
-                ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-                manualResetEventList.Add(manualResetEvent);
+                AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
+                autoResetEventList.Add(AutoResetEvent);
 
                 ThreadPool.QueueUserWorkItem((args) =>
                 {
                     Object[] argArray = args as Object[];
 
                     Meta emplyoee = argArray[0] as Meta;
-                    ManualResetEvent resetEvent = argArray[1] as ManualResetEvent;
+                    AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
                     HttpClient http = getDefaultHttpCilent(url_order_meal);
                     http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
                     http.AddHeader("Accept", "application/json, text/plain, */*");
@@ -195,13 +192,13 @@ namespace Order2.Service
                     }
 
                     resetEvent.Set();
-                }, new Object[] { emp, manualResetEvent });
+                }, new Object[] { emp, AutoResetEvent });
 
 
             }
 
 
-            WaitHandle.WaitAll(manualResetEventList.ToArray());
+            WaitHandle.WaitAll(autoResetEventList.ToArray());
 
             return failedList;
 

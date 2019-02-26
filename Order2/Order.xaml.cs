@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -27,6 +28,7 @@ namespace Order2
         private OrderService orderService = new OrderService();
           private  IniReader cfg;
         private String mealId;
+        private delegate void ShowRecordsDelegate(List<String> records);
 
         public Order()
         {
@@ -180,14 +182,33 @@ namespace Order2
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+       
+            Thread th = new Thread(new ThreadStart(doGetRecord));
+            th.Start();
+       
+
+        }
+
+        private void doGetRecord()
+        {
             List<Element> empList = getCheckedEmpList();
             if (empList.Count == 0)
             {
                 MessageBox.Show("请选择要查询的人员！");
                 return;
+
             }
-        List<Dictionary<string,object>> mealRecordList=    orderService.GetOrderRecord(empList);
+            List<String> mealRecordList = orderService.GetOrderRecord(empList);
+
+            Dispatcher.BeginInvoke(new ShowRecordsDelegate( (List<String> records)=> {
+                Records window = new Records(records);
+                window.ShowDialog();
+            }), mealRecordList);
+
+          
 
         }
+
+    
     }
 }

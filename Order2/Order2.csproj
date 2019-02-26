@@ -68,14 +68,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
     <Compile Include="Convertor\CheckedConvertor.cs" />
     <Compile Include="Convertor\MealInfoConvertor.cs" />
     <Compile Include="Convertor\MealTipConvertor.cs" />
     <Compile Include="Service\OrderService.cs" />
+    <Compile Include="App.cs" />
+    <Compile Include="Records.xaml.cs">
+      <DependentUpon>Records.xaml</DependentUpon>
+    </Compile>
     <Content Include="Resource\employees.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -84,15 +84,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Entity\Element.cs" />
     <Compile Include="Order.xaml.cs">
       <DependentUpon>Order.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Records.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
