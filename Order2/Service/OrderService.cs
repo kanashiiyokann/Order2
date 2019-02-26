@@ -15,12 +15,8 @@ namespace Order2.Service
 {
     public class OrderService
     {
-        private List<AutoResetEvent> autoResetEventList;
 
         private string token;
-
-
-
 
         public List<Meta> GetMealList(string areaCode)
         {
@@ -157,13 +153,12 @@ namespace Order2.Service
             List<String> failedList = new List<string>();
             string url_order_meal = "http://cloudfront.dgg.net/cloud-front/dinner/admin/addDinnerMeal";
 
-            autoResetEventList = new List<AutoResetEvent>(empList.Count);
-
+            AutoResetEvent autoResetEvent;
             foreach (Element emp in empList)
             {
-                AutoResetEvent AutoResetEvent = new AutoResetEvent(false);
-                autoResetEventList.Add(AutoResetEvent);
+                autoResetEvent = new AutoResetEvent(false);
 
+              
                 ThreadPool.QueueUserWorkItem((args) =>
                 {
                     Object[] argArray = args as Object[];
@@ -192,13 +187,12 @@ namespace Order2.Service
                     }
 
                     resetEvent.Set();
-                }, new Object[] { emp, AutoResetEvent });
+                }, new Object[] { emp, autoResetEvent });
 
-
+                autoResetEvent.WaitOne();
             }
 
-
-            WaitHandle.WaitAll(autoResetEventList.ToArray());
+          
 
             return failedList;
 

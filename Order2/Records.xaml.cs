@@ -28,17 +28,32 @@ namespace Order2
         private void afterInit(List<String> records)
         {
             DataTable dt = new DataTable();
+            dt.Columns.Add("序号");
+            dt.Columns.Add("姓名");
+            dt.Columns.Add("用餐");
+            dt.Columns.Add("时间");
+
 
             int index = 0;
             foreach(String str in records)
             {
                 List<Dictionary<String, Object>> meals = JsonConvert.DeserializeObject<List<Dictionary<String, Object>>>(str);
                 DataRow dr = dt.NewRow();
-                dr["index"] = ++index;
+                if (meals.Count > 0)
+                {
+                    Dictionary<String, Object> last = meals[0];
+                    
 
+                    dr["序号"] = ++index;
+                    dr["姓名"] = last["peopleName"].ToString();
+                    dr["用餐"] = String.Format("{0} {1}", last["mealName"], last["mealTypeName"]);
+                    dr["时间"] = last["haveMealTime"].ToString().Split(' ')[0];
+                }
+                dt.Rows.Add(dr);
 
 
             }
+            this.dataGrid.ItemsSource = dt.DefaultView;
 
 
         }

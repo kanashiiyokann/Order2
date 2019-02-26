@@ -5,17 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Order2"
         mc:Ignorable="d"
-        Title="Records" Height="450" Width="800">
+        Title="Records" Height="357.667" Width="441.361" WindowStartupLocation="CenterScreen">
     <Grid>
-        <DataGrid x:Name="dataGrid">
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name}" ClipboardContentBinding="{x:Null}"/>
-                <DataGridTextColumn Binding="{Binding No}" ClipboardContentBinding="{x:Null}"/>
-                <DataGridTextColumn Binding="{Binding LastMeal}" ClipboardContentBinding="{x:Null}"/>
-                <DataGridTextColumn Binding="{Binding No}" ClipboardContentBinding="{x:Null}"/>
-            </DataGrid.Columns>
-
+        <DataGrid x:Name="dataGrid" Margin="18" IsReadOnly="True" ColumnWidth="*">
+  
         </DataGrid>
-        
+
     </Grid>
 </Window>

@@ -29,6 +29,7 @@ namespace Order2
           private  IniReader cfg;
         private String mealId;
         private delegate void ShowRecordsDelegate(List<String> records);
+        private delegate void AlertOrderResultDelegate(List<String> failedList,List<Element> empList);
 
         public Order()
         {
@@ -52,18 +53,43 @@ namespace Order2
                 return;
             }
 
-         
 
-         List<String> failedList=   orderService.OrderMeal(this.mealId, emps);
+            Thread th = new Thread(new ParameterizedThreadStart((args)=> {
+                List<Element> emplyoeeList=args as List<Element>;
 
-            if (failedList.Count == 0)
-            {
-                MessageBox.Show("全部订餐成功！");
-            }
+            List<String> failedList=    orderService.OrderMeal(this.mealId, emplyoeeList);
+                Dispatcher.BeginInvoke(new AlertOrderResultDelegate((List<String> fl, List<Element> empList)=> {
+                    int failedCount = fl.Count;
+                    int total = empList.Count;
+                    if (failedCount == 0)
+                    {
+                        MessageBox.Show("全部订餐成功！");
+                    }
+                    else if(failedCount==total)
+                    {
+                        MessageBox.Show("全部订餐失败！");
+                    }
+                    else
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        foreach(string name in failedList)
+                        {
+                            sb.Append("," + name);
+                        }
+                        MessageBox.Show("{0}订餐失败，其余成功！",sb.Remove(0,1).ToString());
+
+                    }
+
+
+                }),new object[] { failedList, emplyoeeList });
+
+            }));
+            th.Start(emps);
 
 
 
         }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
