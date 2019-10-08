@@ -148,7 +148,7 @@ namespace Order2.Service
         }
 
 
-        public List<String> OrderMeal(string mealId, List<Element> empList)
+        public List<String> OrderMeal(string mealId,string areaCode, List<Element> empList)
         {
             List<String> failedList = new List<string>();
             string url_order_meal = "http://cloudfront.dgg.net/cloud-front/dinner/admin/addDinnerMeal";
@@ -174,7 +174,7 @@ namespace Order2.Service
                     http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
                     http.AddHeader("Origin", "http://xdy.dgg.net");
 
-                    string content = String.Format("{{\"areaId\":\"CDTY27L\",\"mealId\":\"{0}\",\"peopleNo\":\"{1}\"}}", mealId, emp.No);
+                    string content = String.Format("{{\"areaId\":\"{2}\",\"mealId\":\"{0}\",\"peopleNo\":\"{1}\"}}", mealId, emp.No, areaCode);
                     http.SetParameter(content);
 
                     string res = http.GetResponseString();

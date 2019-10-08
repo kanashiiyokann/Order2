@@ -26,7 +26,7 @@ namespace Order2
     {
         private List<Element> empList;
         private OrderService orderService = new OrderService();
-          private  IniReader cfg;
+        private  IniReader cfg;
         private String mealId;
         private delegate void ShowRecordsDelegate(List<String> records);
         private delegate void AlertOrderResultDelegate(List<String> failedList,List<Element> empList);
@@ -57,7 +57,8 @@ namespace Order2
             Thread th = new Thread(new ParameterizedThreadStart((args)=> {
                 List<Element> emplyoeeList=args as List<Element>;
 
-            List<String> failedList=    orderService.OrderMeal(this.mealId, emplyoeeList);
+                String areaCode = cfg.Read("setting", "addressId");
+            List<String> failedList=    orderService.OrderMeal(this.mealId, areaCode,emplyoeeList);
                 Dispatcher.BeginInvoke(new AlertOrderResultDelegate((List<String> fl, List<Element> empList)=> {
                     int failedCount = fl.Count;
                     int total = empList.Count;
@@ -76,7 +77,7 @@ namespace Order2
                         {
                             sb.Append("," + name);
                         }
-                        MessageBox.Show("{0}订餐失败，其余成功！",sb.Remove(0,1).ToString());
+                        MessageBox.Show(String.Format("{0}订餐失败，其余成功！",sb.Remove(0,1).ToString()),"订餐发生失败!");
 
                     }
 
@@ -111,10 +112,10 @@ namespace Order2
             orderService.getToken();
       
             orderService.Login(cfg.Read("setting", "name"), cfg.Read("setting", "pwd"));
-            
-            //加载菜单
 
-          List<Meta> meals=  orderService.GetMealList("CDTY27L");
+            //加载菜单
+            String areaCode = cfg.Read("setting", "addressId");
+           List<Meta> meals=  orderService.GetMealList(areaCode);
 
             string skip = cfg.Read("setting", "skip");
 
