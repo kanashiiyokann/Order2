@@ -21,16 +21,16 @@ namespace Order2.Service
         public List<Meta> GetMealList(string areaCode)
         {
 
-            string url_get_meal = "http://cloudfront.dgg.net/cloud-front/meal/admin/getUsableMealList";
+            string url_get_meal = "http://cloudfront.dgg188.cn/cloud-front/meal/admin/getUsableMealList";
             HttpClient http = getDefaultHttpCilent(url_get_meal);
 
-            http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
+            http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
             http.AddHeader("Accept", "application/json, text/plain, */*");
             http.AddHeader("Accept-Encoding", "gzip, deflate");
             http.AddHeader("Connection", "keep-alive");
             http.AddHeader("timestamp", getTimeStamp());
             http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-            http.AddHeader("Origin", "http://xdy.dgg.net");
+            http.AddHeader("Origin", "http://xdy.dgg188.cn");
 
             http.SetParameter(String.Format("{{\"haveMealCode\":\"{0}\"}}", areaCode));
 
@@ -96,15 +96,15 @@ namespace Order2.Service
                     Element emplyoee = argArray[0] as Element;
                     AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
 
-                    string url_order_record = "http://cloudfront.dgg.net/cloud-front/dinner/admin/getDinnerRecordList";
+                    string url_order_record = "http://cloudfront.dgg188.cn/cloud-front/dinner/admin/getDinnerRecordList";
                     HttpClient http = getDefaultHttpCilent(url_order_record);
-                    http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
+                    http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
                     http.AddHeader("Accept", "application/json, text/plain, */*");
                     http.AddHeader("Accept-Encoding", "gzip, deflate");
                     http.AddHeader("Connection", "keep-alive");
                     http.AddHeader("timestamp", getTimeStamp());
                     http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-                    http.AddHeader("Origin", "http://xdy.dgg.net");
+                    http.AddHeader("Origin", "http://xdy.dgg188.cn");
 
                     string content = String.Format("{{\"deptId\":\"\",\"haveMealTimeEnd\":null,\"haveMealTimeStart\":null,\"mealType\":\"\",\"page\":1,\"pageSize\":3,\"peopleNo\":\"{0}\",\"searchType\":1,\"sourceType\":\"\"}}'",emplyoee.No);
                     http.SetParameter(content);
@@ -151,7 +151,7 @@ namespace Order2.Service
         public List<String> OrderMeal(string mealId,string areaCode, List<Element> empList)
         {
             List<String> failedList = new List<string>();
-            string url_order_meal = "http://cloudfront.dgg.net/cloud-front/dinner/admin/addDinnerMeal";
+            string url_order_meal = "http://cloudfront.dgg188.cn/cloud-front/dinner/admin/addDinnerMeal";
 
             AutoResetEvent autoResetEvent;
             foreach (Element emp in empList)
@@ -166,13 +166,13 @@ namespace Order2.Service
                     Meta emplyoee = argArray[0] as Meta;
                     AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
                     HttpClient http = getDefaultHttpCilent(url_order_meal);
-                    http.AddHeader("Referer", "http://xdy.dgg.net/dict/");
+                    http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
                     http.AddHeader("Accept", "application/json, text/plain, */*");
                     http.AddHeader("Accept-Encoding", "gzip, deflate");
                     http.AddHeader("Connection", "keep-alive");
                     http.AddHeader("timestamp", getTimeStamp());
                     http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-                    http.AddHeader("Origin", "http://xdy.dgg.net");
+                    http.AddHeader("Origin", "http://xdy.dgg188.cn");
 
                     string content = String.Format("{{\"areaId\":\"{2}\",\"mealId\":\"{0}\",\"peopleNo\":\"{1}\"}}", mealId, emp.No, areaCode);
                     http.SetParameter(content);
