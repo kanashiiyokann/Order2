@@ -28,7 +28,7 @@ namespace Order2
         private void afterInit(List<String> records)
         {
             DataTable dt = new DataTable();
-            dt.Columns.Add("序号");
+            dt.Columns.Add("序号").MaxLength=50;
             dt.Columns.Add("姓名");
             dt.Columns.Add("用餐");
             dt.Columns.Add("时间");
@@ -54,6 +54,7 @@ namespace Order2
 
             }
             this.dataGrid.ItemsSource = dt.DefaultView;
+
 
 
         }

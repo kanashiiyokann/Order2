@@ -7,9 +7,7 @@
         mc:Ignorable="d"
         Title="Records" Height="357.667" Width="441.361" WindowStartupLocation="CenterScreen">
     <Grid>
-        <DataGrid x:Name="dataGrid" Margin="18" IsReadOnly="True" ColumnWidth="*">
-  
-        </DataGrid>
+        <DataGrid x:Name="dataGrid" Margin="18" IsReadOnly="True" ColumnWidth="*" />
 
     </Grid>
 </Window>

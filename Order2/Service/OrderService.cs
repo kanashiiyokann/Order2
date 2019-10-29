@@ -17,20 +17,22 @@ namespace Order2.Service
     {
 
         private string token;
-
+        private String origin = "http://xdy.dgg188.cn";
+        //
+        private String referer = "http://xdy.dgg188.cn/dict/";
         public List<Meta> GetMealList(string areaCode)
         {
 
             string url_get_meal = "http://cloudfront.dgg188.cn/cloud-front/meal/admin/getUsableMealList";
             HttpClient http = getDefaultHttpCilent(url_get_meal);
 
-            http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
+            http.AddHeader("Referer", referer);
             http.AddHeader("Accept", "application/json, text/plain, */*");
             http.AddHeader("Accept-Encoding", "gzip, deflate");
             http.AddHeader("Connection", "keep-alive");
             http.AddHeader("timestamp", getTimeStamp());
             http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-            http.AddHeader("Origin", "http://xdy.dgg188.cn");
+            http.AddHeader("Origin", origin);
 
             http.SetParameter(String.Format("{{\"haveMealCode\":\"{0}\"}}", areaCode));
 
@@ -51,7 +53,7 @@ namespace Order2.Service
             name = Base64Cryptor.Encrypt(name);
             pwd = Md5Cryptor.Encrypt(pwd);
 
-            string url_login = "http://211.149.178.98:8088/sysuser/login";
+            string url_login = "http://guazhai.dgg188.cn:8088/sysuser/login";
             HttpWebRequest request = WebRequest.Create(url_login) as HttpWebRequest;
 
             request.Method = "POST";
@@ -132,7 +134,7 @@ namespace Order2.Service
         public void getToken()
         {
             this.token = null;
-            string url_token = "http://211.149.178.98:8088/session/gettoken";
+            string url_token = "http://guazhai.dgg188.cn:8088/session/gettoken";
             HttpClient http = getDefaultHttpCilent(url_token);
 
             string res = http.GetResponseString();

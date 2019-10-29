@@ -30,6 +30,7 @@ namespace Order2
         private String mealId;
         private delegate void ShowRecordsDelegate(List<String> records);
         private delegate void AlertOrderResultDelegate(List<String> failedList,List<Element> empList);
+        
 
         public Order()
         {
