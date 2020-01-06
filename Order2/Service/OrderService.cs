@@ -17,13 +17,12 @@ namespace Order2.Service
     {
 
         private string token;
-        private String origin = "http://xdy.dgg188.cn";
-        //
-        private String referer = "http://xdy.dgg188.cn/dict/";
+        private static string host = "http://guazhai.dggjt.com";
+        private static String referer = String.Concat(host,"/");
         public List<Meta> GetMealList(string areaCode)
         {
 
-            string url_get_meal = "http://cloudfront.dgg188.cn/cloud-front/meal/admin/getUsableMealList";
+            string url_get_meal = "http://cloudfront.dggjt.com/cloud-front/meal/admin/getUsableMealList";
             HttpClient http = getDefaultHttpCilent(url_get_meal);
 
             http.AddHeader("Referer", referer);
@@ -32,7 +31,7 @@ namespace Order2.Service
             http.AddHeader("Connection", "keep-alive");
             http.AddHeader("timestamp", getTimeStamp());
             http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-            http.AddHeader("Origin", origin);
+            http.AddHeader("Origin", host);
 
             http.SetParameter(String.Format("{{\"haveMealCode\":\"{0}\"}}", areaCode));
 
@@ -53,7 +52,7 @@ namespace Order2.Service
             name = Base64Cryptor.Encrypt(name);
             pwd = Md5Cryptor.Encrypt(pwd);
 
-            string url_login = "http://guazhai.dgg188.cn:8088/sysuser/login";
+            string url_login = OrderService.host+":8088/sysuser/login";
             HttpWebRequest request = WebRequest.Create(url_login) as HttpWebRequest;
 
             request.Method = "POST";
@@ -98,15 +97,15 @@ namespace Order2.Service
                     Element emplyoee = argArray[0] as Element;
                     AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
 
-                    string url_order_record = "http://cloudfront.dgg188.cn/cloud-front/dinner/admin/getDinnerRecordList";
+                    string url_order_record = "http://cloudfront.dggjt.com/cloud-front/dinner/admin/getDinnerRecordList";
                     HttpClient http = getDefaultHttpCilent(url_order_record);
-                    http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
+                    http.AddHeader("Referer", referer);
                     http.AddHeader("Accept", "application/json, text/plain, */*");
                     http.AddHeader("Accept-Encoding", "gzip, deflate");
                     http.AddHeader("Connection", "keep-alive");
                     http.AddHeader("timestamp", getTimeStamp());
                     http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-                    http.AddHeader("Origin", "http://xdy.dgg188.cn");
+                    http.AddHeader("Origin", host);
 
                     string content = String.Format("{{\"deptId\":\"\",\"haveMealTimeEnd\":null,\"haveMealTimeStart\":null,\"mealType\":\"\",\"page\":1,\"pageSize\":3,\"peopleNo\":\"{0}\",\"searchType\":1,\"sourceType\":\"\"}}'",emplyoee.No);
                     http.SetParameter(content);
@@ -134,7 +133,7 @@ namespace Order2.Service
         public void getToken()
         {
             this.token = null;
-            string url_token = "http://guazhai.dgg188.cn:8088/session/gettoken";
+            string url_token = OrderService.host+":8088/session/gettoken";
             HttpClient http = getDefaultHttpCilent(url_token);
 
             string res = http.GetResponseString();
@@ -153,7 +152,7 @@ namespace Order2.Service
         public List<String> OrderMeal(string mealId,string areaCode, List<Element> empList)
         {
             List<String> failedList = new List<string>();
-            string url_order_meal = "http://cloudfront.dgg188.cn/cloud-front/dinner/admin/addDinnerMeal";
+            string url_order_meal = "http://cloudfront.dggjt.com/cloud-front/dinner/admin/addDinnerMeal";
 
             AutoResetEvent autoResetEvent;
             foreach (Element emp in empList)
@@ -168,15 +167,16 @@ namespace Order2.Service
                     Meta emplyoee = argArray[0] as Meta;
                     AutoResetEvent resetEvent = argArray[1] as AutoResetEvent;
                     HttpClient http = getDefaultHttpCilent(url_order_meal);
-                    http.AddHeader("Referer", "http://xdy.dgg188.cn/dict/");
+                    http.AddHeader("Referer", "http://guazhai.dggjt.com");
                     http.AddHeader("Accept", "application/json, text/plain, */*");
                     http.AddHeader("Accept-Encoding", "gzip, deflate");
                     http.AddHeader("Connection", "keep-alive");
                     http.AddHeader("timestamp", getTimeStamp());
                     http.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-                    http.AddHeader("Origin", "http://xdy.dgg188.cn");
+                    http.AddHeader("Origin", "http://guazhai.dggjt.com");               
+                    http.AddHeader("Pragma", "no-cache");
 
-                    string content = String.Format("{{\"areaId\":\"{2}\",\"mealId\":\"{0}\",\"peopleNo\":\"{1}\"}}", mealId, emp.No, areaCode);
+                    string content = string.Format("{{\"areaId\":\"{2}\",\"mealId\":\"{0}\",\"peopleNo\":\"{1}\"}}", mealId, emp.No, areaCode);
                     http.SetParameter(content);
 
                     string res = http.GetResponseString();
